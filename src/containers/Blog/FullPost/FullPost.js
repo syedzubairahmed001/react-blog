@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import {withRouter} from "react-router-dom";
 
 import "./FullPost.css";
 
@@ -9,10 +10,17 @@ class FullPost extends Component {
         loadedPost: null
     }
 
+    componentDidMount() {
+        this.loadPost();
+    }
     componentDidUpdate() {
-        if(this.props.id){
-            if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id) ){
-                Axios.get('/posts/' + this.props.id)
+        this.loadPost();
+    }
+
+    loadPost = () => {
+        if(this.props.match.params.id){
+            if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== +this.props.match.params.id) ){
+                Axios.get('/posts/' + this.props.match.params.id)
                 .then(res => {
                     this.setState({loadedPost: res.data})
                 })
@@ -21,7 +29,7 @@ class FullPost extends Component {
     }
 
     deletePostHandler = () => {
-        Axios.delete('/posts/' + this.props.id)
+        Axios.delete('/posts/' + this.props.match.params.id)
             .then(res => {
                 console.log(res);
             })
@@ -29,7 +37,7 @@ class FullPost extends Component {
 
   render() {
     let post = <p style={{textAlign: 'center'}}>Please select a Post!</p>;
-    if (this.props.id) {
+    if (this.props.match.params.id) {
         post = "loading...";
         if(this.state.loadedPost){
             post = (
@@ -48,4 +56,4 @@ class FullPost extends Component {
   }
 }
 
-export default FullPost;
+export default withRouter(FullPost);
