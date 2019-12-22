@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/react-blog@master
+    - uses: actions/checkout@master
     - name: Build
       run: |
         npm install
